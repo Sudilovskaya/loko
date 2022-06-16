@@ -56,9 +56,9 @@ export default {
    position: relative;
    grid-column: span 5;
    height: 1550px;
-   display: flex;
    padding: 30px 20px 40px 20px;
    margin: 50px 150px;
+   justify-content: center;
    max-width: 1220px;   
    width: 100%;  
    display: grid;
