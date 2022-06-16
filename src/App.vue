@@ -1,5 +1,23 @@
 <template>
 <div  id="app" class="grid-wrapper">
+  <cart v-if="cartVisible" @showDialog="showCart" @hideCart="hideCart">
+    <div class="cart__product"  v-bind:products="products" v-bind:item="item" >
+      <div class="cart__image">
+        <img src="@/assets/IMG_872110.png" alt="">
+      </div>
+      <div class="cart__info">
+       <div class="cart__text">
+        <div class="cart__title">кресло гамак подвесной тканевый</div>
+        <div class="cart__description">Гамак, 2 подушки, перекладина прямая, крепёж для бетонных перекрытий.</div>
+       </div>
+       <div class="cart__counter">
+         <div class="counter-btn">–</div>
+         <div class="counter-value">1</div>
+         <div class="counter-btn">+</div>
+       </div>
+      </div>
+    </div>
+   </cart>
    <header class="header">
           <div class="header__nav">
           <a href="#" class="header__item"> каталог </a>
@@ -29,7 +47,7 @@
           <div class="header__phone">
             <a href="tel:+78008008080"> +7 (800) 800–80–80</a>
           </div>
-          <div class="header__cart" @click="counter">
+          <div class="header__cart" @click="showCart">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M6 2L3 6V20C3 20.5304 3.21071 21.0391 3.58579 21.4142C3.96086 21.7893 4.46957 22 5 22H19C19.5304 22 20.0391 21.7893 20.4142 21.4142C20.7893 21.0391 21 20.5304 21 20V6L18 2H6Z" stroke="#433D39" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               <path d="M3 6H21" stroke="#433D39" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -104,7 +122,7 @@
             </a>
             </div>
           <div class="footer__social">
-            <a href="#" target="_blank" class="social__icon btn">
+            <a href="#" target="_blank" class="social__icon btn whatsapp">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g clip-path="url(#clip0_1_98)">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M9.99751 0H10.0025C15.5163 0 20 4.48625 20 10C20 15.5138 15.5163 20 10.0025 20C8.04586 20.0042 6.13173 19.4292 4.50126 18.3475L0.657513 19.5763L1.90376 15.8612C0.663324 14.159 -0.00341075 12.1063 1.31212e-05 10C1.31212e-05 4.485 4.48376 0 9.99751 0ZM13.8592 15.5325C14.6229 15.3675 15.5804 14.8025 15.8217 14.1212C16.0629 13.4387 16.0629 12.8575 15.9929 12.7337C15.9364 12.6355 15.8027 12.5712 15.6032 12.4751C15.5513 12.4501 15.4949 12.4229 15.4342 12.3925C15.1404 12.2462 13.7117 11.54 13.4417 11.4462C13.1767 11.3462 12.9242 11.3812 12.7242 11.6637C12.6861 11.717 12.6482 11.7704 12.6104 11.8234C12.3692 12.1628 12.1364 12.4901 11.9429 12.6987C11.7667 12.8862 11.4792 12.91 11.2379 12.81C11.2116 12.799 11.1815 12.7868 11.1477 12.7732C10.7657 12.6189 9.9185 12.2768 8.89293 11.3637C8.02793 10.5937 7.44043 9.63498 7.27043 9.34748C7.10352 9.05907 7.24749 8.88995 7.38055 8.73365C7.38302 8.73076 7.38548 8.72787 7.38793 8.72498C7.47372 8.61884 7.55697 8.53045 7.64064 8.44162C7.70082 8.37773 7.76122 8.31361 7.82293 8.24248C7.8321 8.23192 7.84101 8.22167 7.84969 8.21168C7.98073 8.06102 8.05876 7.9713 8.14668 7.78373C8.24668 7.58998 8.17543 7.38998 8.10418 7.24248C8.05516 7.13918 7.75232 6.40443 7.49236 5.77368C7.38112 5.50378 7.27773 5.25292 7.20543 5.07873C7.01168 4.61498 6.86418 4.59748 6.57043 4.58498C6.56143 4.58453 6.55235 4.58407 6.54317 4.58361C6.45031 4.57891 6.34805 4.57373 6.23543 4.57373C5.85293 4.57373 5.45418 4.68623 5.21293 4.93248C5.2045 4.94109 5.19571 4.95003 5.18659 4.9593C4.87795 5.27319 4.19043 5.97241 4.19043 7.36623C4.19043 8.76274 5.1813 10.1143 5.36465 10.3643C5.3697 10.3712 5.37414 10.3773 5.37793 10.3825C5.38896 10.397 5.40975 10.4271 5.44002 10.4709C5.81437 11.013 7.63772 13.6535 10.3567 14.78C12.6542 15.7325 13.3367 15.6437 13.8592 15.5325Z" fill="#4CAF50"/>
@@ -126,18 +144,25 @@
 <script>
 import productItem from '@/components/productItem'
 import popUp from '@/components/popUp'
+import cart from '@/components/cart'
 
 export default {
   name: 'App',
   components: {
     productItem,
     popUp,
+    cart
   },
   data() {
     return {
       products: [],
       counter:0,
       counterVisible: false,
+      cartVisible: false,
+       item: {
+         type: Object,
+         required: true
+       }
     }
   },
   mounted() {
@@ -155,7 +180,15 @@ export default {
       },
       hideDialog(){
         document.body.classList.toggle('lock')
-      }
+      },
+      hideCart(){
+        this.cartVisible = false;
+        document.body.classList.toggle('lock')
+      },
+      showCart(){
+         this.cartVisible = true;
+        document.body.classList.toggle('lock')
+      },
     }
 }
 </script>
@@ -332,10 +365,9 @@ a {
   border: 1px solid #a7a9ab;
   letter-spacing: 0.04em;
 }
-.social__icon.btn:nth-child(2){
+.social__icon.whatsapp{
   color:#4CAF50;
   border: 1px solid #4CAF50;
-  margin-left: 20px;
 }
 .footer__devider{
   grid-column: span 5;
@@ -355,5 +387,51 @@ a {
   grid-column: 5;
   margin-left: auto;
   font-family: 'Futura PT';
+}
+
+.cart__product {
+  grid-template: 1fr / repeat(5, 1fr);
+  display: grid;
+  gap: 20px;
+  max-height: 280px;
+  height: 100%;
+  border-bottom: 1px solid rgba(67, 61, 57, 0.1);
+}
+.cart__image{
+  grid-column: 1;
+}
+.cart__image img {
+  width: 220px;
+  height: 260px;
+  object-fit: cover;
+}
+.cart__info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  grid-column: span 2;
+}
+.cart__title {
+  font-size: 20px;
+  line-height: 20px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.cart__description {
+  font-family: 'Futura PT';
+  margin-top: 11px;
+}
+.cart__counter {
+  display: flex;
+  padding-bottom: 20px;
+  gap: 20px;
+  align-items: center;
+}
+.counter-btn {
+  border: 1px solid #433D39;
+  padding: 12px 20px;
+  font-family: 'Futura PT';
+  font-size: 20px;
+  cursor: pointer;
 }
 </style>
