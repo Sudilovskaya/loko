@@ -39,9 +39,9 @@
                     <path d="M1 5.75L6 0.75L11 5.75L16 0.75L21 5.75L26 0.75" stroke="#433D39"/>
                 </svg>
             </div>
-            
+            <div class="product__details"> {{item.slug.description}}</div>
          </div>
-         <div class="product__details"> {{item.slug.description}}</div>
+         
   </popUp >
     <div  class="product">
       <div class="product__image">
@@ -120,7 +120,7 @@ export default {
 .image__group{
    display: flex;
    flex-direction: column;
-   grid-column: span 2;
+   grid-column: 1;
    gap: 20px;
 }
 .popup__image img{
@@ -163,19 +163,28 @@ export default {
   width: 100%;
 }
 .product__col.popup{
-  grid-column: span 3;
+  grid-column: span 4;
   margin-left: 130px;
+  padding-top: 0;
 }
 .product__title {
   text-transform: uppercase;
   font-size: 60px;
   line-height: 60px;
+  height: 120px;
+}
+.product__col.popup>.product__title{
+  height: auto;
+  max-width: 550px;
 }
 .product__subtitle {
   display: inline-block;
   margin-top: 93px;
   padding-bottom: 25px;
   position: relative;
+}
+.product__col.popup>.product__subtitle{
+  margin-top: 33px;
 }
 .product__cost {
   font-size: 20px;
@@ -205,6 +214,9 @@ export default {
   max-width: 500px;
   font-family: 'Futura PT';
 }
+.product__col.popup>.product__description{
+  margin-top: 25px;
+}
 .btn {
   display: inline-block;
   cursor: pointer;
@@ -213,15 +225,11 @@ export default {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   border: 1px solid #433D39;
-  
   font-size: 20px;
   transition: all .3s ease-in-out;
 }
-.product__btn{
-  width: 183px;
-}
-.cart__btn{
-  width: 153px;
+.product__col.popup>.btn{
+  margin-top: 35px;
 }
 .btn svg path{
   transition: all .3s ease-in-out;
