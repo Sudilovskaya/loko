@@ -49,6 +49,7 @@ export default {
    display: grid;
   grid-template: 1fr / repeat(5, 1fr);
   overflow-x: hidden;
+  justify-items: center;
 }
 .dialog__content{
    background-color:#fff;
@@ -58,11 +59,10 @@ export default {
    height: 1550px;
    padding: 30px 20px 40px 20px;
    margin: 50px 150px;
-   justify-content: center;
    max-width: 1220px;   
    width: 100%;  
    display: grid;
-  grid-template: 1fr / repeat(5, 1fr);
+   grid-template: 1fr / repeat(5, 1fr);
 }
 
 </style>

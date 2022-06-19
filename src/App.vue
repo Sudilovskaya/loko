@@ -1,21 +1,35 @@
 <template>
 <div  id="app" class="grid-wrapper">
-  <cart v-if="cartVisible" @showDialog="showCart" @hideCart="hideCart">
-    <div class="cart__product"  v-bind:products="products" v-bind:item="item" >
+  <cart v-if="cartVisible" @showDialog="showCart" @hideCart="hideCart"   v-bind:item="item">
+    <div class="cart__wrapper">
+      <div class="cart__product"  v-if="itemCount > 0"  v-for="item of cart" >
       <div class="cart__image">
-        <img src="@/assets/IMG_872110.png" alt="">
+          <img v-bind:src="item.image.image"  alt="">
       </div>
       <div class="cart__info">
        <div class="cart__text">
-        <div class="cart__title">кресло гамак подвесной тканевый</div>
-        <div class="cart__description">Гамак, 2 подушки, перекладина прямая, крепёж для бетонных перекрытий.</div>
+        <div class="cart__title">{{item.name}}</div>
+        <div class="cart__description">{{item.short_description}}</div>
        </div>
        <div class="cart__counter">
-         <div class="counter-btn">–</div>
+         <div class="counter-btn" @click="minus">–</div>
          <div class="counter-value">1</div>
-         <div class="counter-btn">+</div>
+         <div class="counter-btn" @click="plus">+</div>
        </div>
       </div>
+     </div>
+     <p v-else class="cart__empty" >Корзина пуста </p>
+     <button class="cta-btn btn">
+               <svg width="27" height="10" viewBox="0 0 27 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                     <path d="M1 9.25L6 4.25L11 9.25L16 4.25L21 9.25L26 4.25" stroke="#433D39"/>
+                     <path d="M1 5.75L6 0.75L11 5.75L16 0.75L21 5.75L26 0.75" stroke="#433D39"/>
+                  </svg>
+                     оформить заказ
+                  <svg width="27" height="10" viewBox="0 0 27 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                     <path d="M1 9.25L6 4.25L11 9.25L16 4.25L21 9.25L26 4.25" stroke="#433D39"/>
+                     <path d="M1 5.75L6 0.75L11 5.75L16 0.75L21 5.75L26 0.75" stroke="#433D39"/>
+                  </svg>
+            </button>
     </div>
    </cart>
    <header class="header">
@@ -83,7 +97,7 @@
      </div>
     </header>
     <main class="main">
-      <productItem  v-for="item of products" v-bind:item="item" @addToCart="addToCart"  @showDialog="showDialog" @hideDialog="hideDialog" />
+      <productItem  v-for="item of products" v-bind:item="item" v-bind:cart="cart" @cartCounter="cartCounter" @updateItem="updateItem" @updateCounter="updateCounter" @showDialog="showDialog" @hideDialog="hideDialog" />
     </main>
     <footer class="footer">
       <div class="footer__wrapper">
@@ -156,13 +170,15 @@ export default {
   data() {
     return {
       products: [],
+      cart: [],
       counter:0,
       counterVisible: false,
       cartVisible: false,
-       item: {
+      item: {
          type: Object,
-         required: true
-       }
+         required: true,
+       },
+      itemCount: 0
     }
   },
   mounted() {
@@ -171,9 +187,15 @@ export default {
     .then(data => this.products = data)
 }, 
   methods:{
-      addToCart(){
-        this.counterVisible = true;
-        this.counter +=1;
+      cartCounter(){
+        this.counterVisible = true
+        this.counter += 1
+      },
+      increase(event){
+        const cartCounter = event.target.closest('.cart__counter')
+        const counterNum = cartCounter.querySelector('.counter-value')
+        counterNum.innerText = --counterNum.innerText
+
       },
       showDialog(){
         document.body.classList.toggle('lock')
@@ -189,7 +211,35 @@ export default {
          this.cartVisible = true;
         document.body.classList.toggle('lock')
       },
-    }
+      updateCounter(itemCount){
+        this.itemCount = itemCount.itemCount
+      },
+      updateItem(item){
+        this.item = item.item
+        this.cart.push(this.item)
+        this.cartFilter()
+      },
+      cartFilter() {
+        const arr = this.cart
+        const table = {}
+        const res = arr.filter(({name}) =>(!table[name] && (table[name] = 1)))
+        this.cart = res
+      }, 
+      minus (event){
+        const cartCounter = event.target.closest('.cart__counter')
+        const counterNum = cartCounter.querySelector('.counter-value')
+        if(parseInt(counterNum.innerText) > 1){
+        counterNum.innerText = --counterNum.innerText
+        this.counter -=1
+        }
+      },
+      plus(event){
+        const cartCounter = event.target.closest('.cart__counter')
+        const counterNum = cartCounter.querySelector('.counter-value')
+        counterNum.innerText = ++counterNum.innerText
+        this.counter +=1
+      },
+  }
 }
 </script>
 
@@ -396,6 +446,7 @@ a {
   max-height: 280px;
   height: 100%;
   border-bottom: 1px solid rgba(67, 61, 57, 0.1);
+  padding-bottom: 20px;
 }
 .cart__image{
   grid-column: 1;
@@ -433,5 +484,76 @@ a {
   font-family: 'Futura PT';
   font-size: 20px;
   cursor: pointer;
+}
+.cart__wrapper{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+  width: 100%;
+}
+.cart__empty{
+  margin: auto;
+  font-family: 'Futura PT';
+  font-size: 25px;
+}
+.cta-btn{
+  display: block;
+  cursor: pointer;
+  padding: 14px 19px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  border: 1px solid #433D39;
+  color: #433D39;
+  background-color: #fff;
+  font-size: 20px;
+  transition: all .3s ease-in-out;
+  position:relative;
+  max-width: 223px;
+  font-family: 'Alumni Sans', sans-serif;
+  margin-left: auto;
+  margin-top: auto;
+}
+.cta-btn svg path{
+  transition: all .3s ease-in-out;
+}
+.cta-btn:hover{
+  background-color: #433D39;
+  color: #FFFFFF;
+}
+.cta-btn:hover svg path {
+  stroke: #FFFFFF;
+}
+.slug__description strong{
+  display: inline-block;
+  font-family: 'Alumni Sans', sans-serif;
+  font-size: 20px;
+  margin-top: 34px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.slug__description p{
+  margin-bottom: 11px;
+  font-family: 'Futura PT';
+}
+.slug__description hr{
+  border: 1px solid rgba(67, 61, 57, 0.1);
+  margin-bottom: 35px;
+  margin-top: 35px;
+}
+.slug__description table{
+  border: none;
+}
+.slug__description td{
+  display: inline;
+  width: 250px;
+  border: none;
+   font-family: 'Futura PT';
+   text-align: left;
+}
+.slug__description tr{
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
 }
 </style>
